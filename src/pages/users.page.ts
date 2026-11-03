@@ -32,7 +32,7 @@ export class UsersPage {
   private async getColumnIndex(columnName: string): Promise<number> {
     const headers = await this.table.getByRole('columnheader').allTextContents();
     const columnIndex = headers.findIndex(
-      (header) => header.trim().toLowerCase() === columnName.toLowerCase(),
+      (header) => header.replace(/[↕↑↓]/g, '').trim().toLowerCase() === columnName.toLowerCase(),
     );
 
     if (columnIndex < 0) {
