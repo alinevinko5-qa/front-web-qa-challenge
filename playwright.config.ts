@@ -19,17 +19,17 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
-      testIgnore: '**/responsive/**/*.spec.ts',
+      testIgnore: '**/responsividade/**/*.spec.ts',
     },
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
-      testIgnore: '**/responsive/**/*.spec.ts',
+      testIgnore: '**/responsividade/**/*.spec.ts',
     },
     {
       name: 'mobile-chromium',
       use: { ...devices['Pixel 7'] },
-      testMatch: '**/responsive/**/*.spec.ts',
+      testMatch: '**/responsividade/**/*.spec.ts',
     },
   ],
 });

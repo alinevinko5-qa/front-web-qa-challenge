@@ -8,7 +8,7 @@
 
 O projeto automatiza fluxos selecionados de uma aplicação web pública para demonstrar cobertura funcional, validação de formulário, sincronização com componente assíncrono, acessibilidade básica e execução mobile. A suíte contém **seis testes lógicos independentes**, organizados em cinco arquivos de especificação. Os cinco cenários desktop executam em Chromium e Firefox; o cenário mobile executa em Chromium emulado como Pixel 7.
 
-A configuração centralizada gera relatório HTML e screenshot ao final de cada teste. Em falhas, mantém trace e vídeo. O workflow do GitHub Actions executa a suíte em push, pull request ou solicitação manual e publica os resultados como artefato temporário.
+A configuração centralizada gera relatório HTML e screenshot ao final de cada teste. Os cenários também salvam capturas nos principais passos da jornada para mostrar o estado antes e depois das interações. Em falhas, mantém trace e vídeo. O workflow do GitHub Actions executa a suíte em push, pull request ou solicitação manual e publica os resultados como artefato temporário.
 
 ## 2. Aplicação-alvo e objetivo
 
@@ -54,22 +54,23 @@ As justificativas e prioridades estão detalhadas na [matriz de cenários](./mat
 │   ├── data/
 │   │   └── registration.ts
 │   ├── fixtures/
+│   │   ├── capturar-etapa.ts
 │   │   └── test.ts
 │   └── pages/
 │       ├── delayed-dropdown.page.ts
 │       ├── registration.page.ts
 │       └── users.page.ts
 ├── tests/
-│   ├── accessibility/
-│   │   └── registration-accessibility.spec.ts
-│   ├── dynamic/
-│   │   └── delayed-dropdown.spec.ts
-│   ├── forms/
-│   │   └── registration.spec.ts
-│   ├── responsive/
-│   │   └── users.mobile.spec.ts
-│   └── users/
-│       └── users.spec.ts
+│   ├── acessibilidade/
+│   │   └── cadastro-acessibilidade.spec.ts
+│   ├── dinamicos/
+│   │   └── menu-suspenso-assincrono.spec.ts
+│   ├── formularios/
+│   │   └── cadastro.spec.ts
+│   ├── responsividade/
+│   │   └── usuarios-dispositivo-movel.spec.ts
+│   └── usuarios/
+│       └── usuarios.spec.ts
 ├── .gitignore
 ├── package.json
 ├── package-lock.json
@@ -89,15 +90,16 @@ As justificativas e prioridades estão detalhadas na [matriz de cenários](./mat
 | `docs/matriz-de-riscos.md` | Descreve riscos, impacto, probabilidade, prioridade, cenários relacionados, mitigação e critérios da priorização. |
 | `docs/relatorio-completo-do-projeto.md` | Este relatório explicativo, com a visão consolidada do projeto e de seus arquivos. |
 | `src/data/registration.ts` | Define o tipo `RegistrationData` e os dados fictícios válidos e inválidos usados nos testes de formulário. |
+| `src/fixtures/capturar-etapa.ts` | Cria screenshots numeradas das principais etapas de cada teste e amplia o limite de tempo para acomodar a captura. |
 | `src/fixtures/test.ts` | Estende as fixtures do Playwright com instâncias tipadas dos page objects, fornecidas por teste. Também exporta `expect`. |
 | `src/pages/users.page.ts` | Encapsula acesso à tabela, busca e leitura de célula associada ao cabeçalho. Normaliza indicadores de ordenação no texto dos cabeçalhos. |
 | `src/pages/registration.page.ts` | Encapsula navegação, preenchimento, envio do formulário e acesso às mensagens de erro e sucesso. |
 | `src/pages/delayed-dropdown.page.ts` | Encapsula acesso ao dropdown assíncrono, solicitação de carregamento e seleção de uma opção não vazia. Erra explicitamente se nenhuma opção estiver disponível. |
-| `tests/users/users.spec.ts` | Implementa a jornada selecionada da tabela (USR-01/02/03/04/07). |
-| `tests/forms/registration.spec.ts` | Implementa envio válido e cenário negativo com validação do e-mail (FRM-01 e FRM-03/06). Um `beforeEach` abre a aplicação antes de cada cenário. |
-| `tests/dynamic/delayed-dropdown.spec.ts` | Valida o carregamento por estado observável e a seleção do dropdown (DYN-01/02). |
-| `tests/accessibility/registration-accessibility.spec.ts` | Valida labels e nome acessível do botão (FRM-07/A11Y-02). |
-| `tests/responsive/users.mobile.spec.ts` | Executa a pesquisa na viewport mobile configurada (RSP-02). |
+| `tests/usuarios/usuarios.spec.ts` | Implementa a jornada selecionada da tabela (USR-01/02/03/04/07). |
+| `tests/formularios/cadastro.spec.ts` | Implementa envio válido e cenário negativo com validação do e-mail (FRM-01 e FRM-03/06). Um `beforeEach` abre a aplicação antes de cada cenário. |
+| `tests/dinamicos/menu-suspenso-assincrono.spec.ts` | Valida o carregamento por estado observável e a seleção do menu suspenso (DYN-01/02). |
+| `tests/acessibilidade/cadastro-acessibilidade.spec.ts` | Valida rótulos e nome acessível do botão (FRM-07/A11Y-02). |
+| `tests/responsividade/usuarios-dispositivo-movel.spec.ts` | Executa a pesquisa na resolução móvel configurada (RSP-02). |
 | `package.json` | Declara scripts, dependências e metadados do projeto. |
 | `package-lock.json` | Fixa a árvore resolvida das dependências para instalação reproduzível com `npm ci`. |
 | `playwright.config.ts` | Centraliza URL-base, projetos de navegador, resolução, workers, retries, reporter e coleta de screenshots, traces e vídeos. |
@@ -128,21 +130,23 @@ Essa divisão deixa os arquivos de teste focados na intenção do cenário, e os
 Na raiz do repositório:
 
 ```bash
-npm ci
-npx playwright install chromium firefox
+npm.cmd ci
+npx.cmd playwright install chromium firefox
 ```
 
 ### Comandos
 
 ```bash
-npm test                 # suíte completa em todos os projetos
-npm run test:chromium    # cenários desktop em Chromium
-npm run test:firefox     # cenários desktop em Firefox
-npm run test:mobile      # cenário mobile em Chromium emulado
-npm run test:ui          # interface interativa do Playwright
-npm run typecheck        # verificação TypeScript sem emissão de arquivos
-npm run report           # abre o relatório HTML existente
+npm.cmd test                 # suíte completa em todos os projetos
+npm.cmd run test:chromium    # cenários desktop em Chromium
+npm.cmd run test:firefox     # cenários desktop em Firefox
+npm.cmd run test:mobile      # cenário mobile em Chromium emulado
+npm.cmd run test:ui          # interface interativa do Playwright
+npm.cmd run typecheck        # verificação TypeScript sem emissão de arquivos
+npm.cmd run report           # abre o relatório HTML existente
 ```
+
+No PowerShell do Windows, use os sufixos `.cmd` para evitar o bloqueio de execução do `npm.ps1` ou `npx.ps1`. Em outros terminais, os comandos podem ser escritos como `npm` e `npx`.
 
 Para configurar outro ambiente compatível, ajuste `BASE_URL` no arquivo `.env` (criado localmente a partir de `.env.example`) ou defina a variável antes da execução. O arquivo `.env` não deve ser versionado.
 
@@ -152,7 +156,7 @@ Para configurar outro ambiente compatível, ajuste `BASE_URL` no arquivo `.env` 
 |---|---|---|---|
 | `chromium` | Chromium desktop | 1280 × 720 | Todos os cenários desktop; exclui a especificação mobile. |
 | `firefox` | Firefox desktop | 1280 × 720 | Todos os cenários desktop; exclui a especificação mobile. |
-| `mobile-chromium` | Chromium com emulação Pixel 7 | 412 × 839 | Especificação `tests/responsive/`. |
+| `mobile-chromium` | Chromium com emulação Pixel 7 | 412 × 839 | Especificação `tests/responsividade/`. |
 
 Chromium cobre o navegador principal; Firefox fornece um segundo mecanismo de navegador. A cobertura mobile fica separada em Chromium emulado para limitar o número de combinações. A emulação não substitui aparelho físico.
 
@@ -171,7 +175,7 @@ Chromium cobre o navegador principal; Firefox fornece um segundo mecanismo de na
 ## 9. Relatórios, screenshots, traces e logs
 
 - Reporter HTML: `playwright-report/`.
-- Screenshots: `screenshot: 'on'`, guardadas em `test-results/` no fim de cada teste.
+- Screenshots: `screenshot: 'on'` guarda uma captura ao fim de cada teste; `src/fixtures/capturar-etapa.ts` também grava imagens numeradas das principais etapas em `test-results/`.
 - Trace e vídeo: `retain-on-failure`, preservados em falhas para diagnóstico.
 - Log da pipeline: `playwright-test.log`, mostrado na saída do workflow e incluído no artefato.
 - Retenção de artefatos GitHub Actions: 14 dias.

@@ -88,7 +88,7 @@ O reporter HTML gera `playwright-report/` a cada execução. Para abrir o relat�
 npm run report
 ```
 
-Uma screenshot é salva ao final de cada teste em `test-results/`, inclusive quando ele passa. Em caso de falha, trace e vídeo também são retidos para diagnóstico. Localmente, os resultados ficam em `playwright-report/` e `test-results/`; essas pastas são ignoradas pelo Git. No GitHub Actions, o relatório HTML, screenshots, traces, vídeos e o log da execução (`playwright-test.log`) são publicados como artefato por 14 dias, mesmo quando os testes falham. O log também aparece na saída da execução do workflow.
+Screenshots são salvas ao final de cada teste e nas etapas significativas da jornada (por exemplo, antes e depois do envio do formulário), em `test-results/`, inclusive quando o teste passa. Em caso de falha, trace e vídeo também são retidos para diagnóstico. Localmente, os resultados ficam em `playwright-report/` e `test-results/`; essas pastas são ignoradas pelo Git. No GitHub Actions, o relatório HTML, screenshots, traces, vídeos e o log da execução (`playwright-test.log`) são publicados como artefato por 14 dias, mesmo quando os testes falham. O log também aparece na saída da execução do workflow.
 
 Os artefatos da pipeline podem ser baixados na página da execução correspondente em **Actions > execução do workflow > Artifacts**. Eles são temporários e não são versionados no repositório, evitando adicionar screenshots, vídeos ou traces volumosos ao controle de versão.
 
@@ -106,20 +106,20 @@ Na execução manual (**Actions > Playwright tests > Run workflow**), é possív
 │   └── matriz-de-cenarios.md
 ├── src/
 │   ├── data/
-│   ├── fixtures/
+│   ├── fixtures/       # fixtures e captura de evidências por etapa
 │   └── pages/
 ├── tests/
-│   ├── accessibility/
-│   ├── dynamic/
-│   ├── forms/
-│   ├── responsive/
-│   └── users/
+│   ├── acessibilidade/
+│   ├── dinamicos/
+│   ├── formularios/
+│   ├── responsividade/
+│   └── usuarios/
 ├── package.json
 ├── playwright.config.ts
 └── tsconfig.json
 ```
 
-`src/fixtures/` fornece page objects tipados por teste; `src/pages/` encapsula interações reutilizadas com tabela, cadastro e dropdown; e `src/data/` guarda dados fictícios do formulário. Os testes continuam organizados por jornada/categoria. Configuração compartilhada de navegadores, URL, concorrência, relatório e evidências fica em `playwright.config.ts`.
+`src/fixtures/` fornece page objects tipados por teste e o helper de captura das etapas; `src/pages/` encapsula interações reutilizadas com tabela, cadastro e dropdown; e `src/data/` guarda dados fictícios do formulário. Os testes continuam organizados por jornada/categoria. Configuração compartilhada de navegadores, URL, concorrência, relatório e evidências fica em `playwright.config.ts`.
 
 ## Estratégia de seletores
 
