@@ -1,13 +1,16 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../../src/fixtures/test.js';
 
-test('searches users at the Pixel 7 mobile viewport', async ({ page }) => {
-  await page.goto('/');
+test('RSP-02: pesquisa usuários na resolução mobile do Pixel 7', async ({ usersPage }) => {
+  // Acessa a aplicação no projeto configurado com o viewport mobile do Pixel 7.
+  await usersPage.goto();
 
-  await expect(page.getByTestId('data-table')).toBeVisible();
-  await expect(page.getByTestId('table-search')).toBeVisible();
-  await page.getByTestId('table-search').fill('Alice Johnson');
+  // Confirma que a tabela e o campo de pesquisa estão disponíveis em tela reduzida.
+  await expect(usersPage.table).toBeVisible();
+  await expect(usersPage.searchInput()).toBeVisible();
 
-  const rows = page.getByTestId('data-table').getByTestId('table-body').locator('tr');
-  await expect(rows).toHaveCount(1);
-  await expect(rows.first()).toContainText('alice@example.com');
+  // Pesquisa um usuário e valida o resultado apresentado na tabela mobile.
+  await usersPage.search('Alice Johnson');
+
+  await expect(usersPage.rows).toHaveCount(1);
+  await expect(usersPage.rows.first()).toContainText('alice@example.com');
 });

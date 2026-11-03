@@ -1,4 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
+import 'dotenv/config';
 
 export default defineConfig({
   testDir: './tests',
@@ -10,7 +11,7 @@ export default defineConfig({
   outputDir: 'test-results',
   use: {
     baseURL: process.env.BASE_URL ?? 'https://playwrightlab.github.io',
-    screenshot: 'only-on-failure',
+    screenshot: 'on',
     trace: 'retain-on-failure',
     video: 'retain-on-failure',
   },

@@ -4,6 +4,22 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+    inputs:
+      project:
+        description: Projeto/navegador para execução manual
+        required: true
+        type: choice
+        options:
+          - all
+          - chromium
+          - firefox
+          - mobile-chromium
+        default: all
+      grep:
+        description: ID ou texto do teste para filtrar (ex.: USR-01, FRM-03, A11Y-02)
+        required: false
+        type: string
+        default: ''
 
 jobs:
   test:
@@ -26,7 +42,19 @@ jobs:
         run: npx playwright install --with-deps chromium firefox
 
       - name: Run test suite
-        run: npm test
+        env:
+          PLAYWRIGHT_PROJECT: ${{ inputs.project || 'all' }}
+          PLAYWRIGHT_GREP: ${{ inputs.grep || '' }}
+        run: |
+          set -o pipefail
+          args=()
+          if [[ "$PLAYWRIGHT_PROJECT" != "all" ]]; then
+            args+=(--project="$PLAYWRIGHT_PROJECT")
+          fi
+          if [[ -n "$PLAYWRIGHT_GREP" ]]; then
+            args+=(--grep "$PLAYWRIGHT_GREP")
+          fi
+          npm test -- "${args[@]}" 2>&1 | tee playwright-test.log
 
       - name: Upload report and failure evidence
         if: always()
@@ -36,5 +64,6 @@ jobs:
           path: |
             playwright-report/
             test-results/
+            playwright-test.log
           if-no-files-found: ignore
           retention-days: 14

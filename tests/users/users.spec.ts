@@ -1,14 +1,13 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../../src/fixtures/test.js';
 
-test.describe('User management', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-  });
+test.describe('Jornada principal - gerenciamento de usuários', () => {
+  test('USR-01/02/03/04/07: valida tabela, pesquisa e situação dos usuários', async ({ page, usersPage }) => {
+    // Acessa a aplicação e localiza a tabela de usuários.
+    await usersPage.goto();
+    const table = usersPage.table;
+    const rows = usersPage.rows;
 
-  test('shows the user table and filters by a known name', async ({ page }) => {
-    const table = page.getByTestId('data-table');
-    const rows = table.getByTestId('table-body').locator('tr');
-
+    // Valida o carregamento, os cabeçalhos e a apresentação inicial da tabela.
     await expect(table).toBeVisible();
     await expect(table.locator('thead th')).toHaveCount(7);
     await expect(page.getByTestId('sort-id')).toContainText('ID');
@@ -19,33 +18,14 @@ test.describe('User management', () => {
     await expect(page.getByTestId('col-actions')).toContainText('Actions');
     await expect(rows).toHaveCount(5);
 
-    await page.getByTestId('table-search').fill('Alice Johnson');
-
+    // Pesquisa uma pessoa existente e valida e-mail e status apresentados.
+    await usersPage.search('Alice Johnson');
     await expect(rows).toHaveCount(1);
     await expect(rows.first()).toContainText('alice@example.com');
-  });
+    await expect.poll(() => usersPage.getCellTextByHeader(1, 'Status')).toMatch(/^(active|inactive|pending)$/);
 
-  test('sorts users and moves to the next page', async ({ page }) => {
-    const table = page.getByTestId('data-table');
-    const rows = table.getByTestId('table-body').locator('tr');
-    const pageSize = page.getByTestId('rows-per-page');
-
-    await pageSize.selectOption('15');
-    await page.getByTestId('sort-name').click();
-    const firstSort = await rows.locator('td:nth-child(3)').allTextContents();
-    const ascendingNames = [...firstSort].sort((a, b) => a.localeCompare(b));
-    const descendingNames = [...ascendingNames].reverse();
-    expect([ascendingNames, descendingNames]).toContainEqual(firstSort);
-
-    await page.getByTestId('sort-name').click();
-    const secondSort = await rows.locator('td:nth-child(3)').allTextContents();
-    expect(secondSort).not.toEqual(firstSort);
-    expect([ascendingNames, descendingNames]).toContainEqual(secondSort);
-
-    await pageSize.selectOption('5');
-    await page.getByTestId('page-2').click();
-
-    await expect(rows).toHaveCount(5);
-    await expect(page.getByTestId('page-2')).toHaveClass(/active/);
+    // Pesquisa uma pessoa inexistente e valida que nenhum registro é exibido.
+    await usersPage.search('Usuario Inexistente');
+    await expect(rows).toHaveCount(0);
   });
 });
