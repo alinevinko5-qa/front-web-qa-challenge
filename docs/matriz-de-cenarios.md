@@ -1,6 +1,6 @@
 # Matriz de cenários
 
-| ID | Jornada | Descrição | Tipo | Risco protegido | Prioridade | Automatizar? | Justificativa | Status |
+| ID | Jornada | Descrição | Tipo de teste | Risco protegido | Prioridade | Automatizar? | Justificativa | Status |
 |---|---|---|---|---|---|---|---|---|
 | USR-01 | Usuários | Carregar tabela, validar cabeçalhos e pesquisar Alice Johnson | E2E desktop | Dados não exibidos ou filtro incorreto | P0 | Sim | Fluxo central e determinístico | Implementado |
 | USR-02 | Usuários | Ordenar nomes e navegar para a segunda página | E2E desktop | Ordenação/paginação inconsistentes | P0 | Sim | Valida operações centrais da tabela | Implementado |
