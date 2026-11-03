@@ -1,8 +1,8 @@
-# Front Web QA Challenge
+# Desafio de controle de qualidade da Web Front
 
 ## Descrição da solução
 
-Projeto de automação end-to-end (E2E) para demonstrar análise de riscos e testes funcionais de uma aplicação web. A suíte contém seis testes independentes; um deles cobre cenários selecionados da tabela de usuários, sem reproduzir toda a jornada de referência. Relatório HTML e evidências apoiam o diagnóstico de falhas.
+Projeto de automação end-to-end (E2E) para demonstrar análise de riscos e testes funcionais de uma aplicação web. A suíte contém seis cenários lógicos independentes; um deles cobre cenários selecionados da tabela de usuários, sem reproduzir toda a jornada de referência. Os cenários desktop executam em Chromium e Firefox, e o cenário mobile em Chromium emulado, totalizando 11 execuções nos projetos configurados. Relatório HTML e evidências apoiam o diagnóstico de falhas.
 
 ## Aplicação utilizada
 
@@ -20,6 +20,7 @@ Projeto de automação end-to-end (E2E) para demonstrar análise de riscos e tes
 - Relatório HTML, screenshots e evidências de falha; a pipeline publica também o log de execução.
 
 O racional de priorização está em [docs/estrategia-de-testes.md](docs/estrategia-de-testes.md), os riscos estão em [docs/matriz-de-riscos.md](docs/matriz-de-riscos.md) e os cenários estão listados em [docs/matriz-de-cenarios.md](docs/matriz-de-cenarios.md).
+O relatório completo também está disponível em [Markdown](docs/relatorio-completo-do-projeto.md), [Word](docs/relatorio-completo-do-projeto.docx) e [PDF](docs/relatorio-completo-do-projeto.pdf).
 
 ## Stack utilizada
 
@@ -43,6 +44,13 @@ npm ci
 npx playwright install chromium firefox
 ```
 
+No PowerShell do Windows, use os executáveis `.cmd` para evitar o bloqueio de `npm.ps1`/`npx.ps1` pela política de execução:
+
+```powershell
+npm.cmd ci
+npx.cmd playwright install chromium firefox
+```
+
 Opcionalmente, copie `.env.example` para `.env` e ajuste `BASE_URL` para apontar a suíte a outro ambiente compatível. O arquivo `.env` local é ignorado pelo Git.
 
 ## Instruções de execução
@@ -54,12 +62,21 @@ npm test
 npm run typecheck
 ```
 
+No PowerShell do Windows, execute os mesmos scripts usando `npm.cmd`:
+
+```powershell
+npm.cmd test
+npm.cmd run typecheck
+```
+
 Para executar contra outro ambiente compatível sem arquivo `.env`, defina `BASE_URL` antes do comando. No PowerShell:
 
 ```powershell
 $env:BASE_URL = "https://seu-ambiente.example"
 npm.cmd test
 ```
+
+Os demais comandos (`npm run test:chromium`, `npm run test:firefox`, `npm run test:mobile`, `npm run test:ui` e `npm run report`) também podem ser chamados como `npm.cmd run ...` no PowerShell. Em terminais macOS/Linux, use `npm` e `npx` sem o sufixo `.cmd`.
 
 Não são necessários usuários, senhas ou segredos para os cenários implementados.
 
@@ -103,17 +120,26 @@ Na execução manual (**Actions > Playwright tests > Run workflow**), é possív
 ├── docs/
 │   ├── estrategia-de-testes.md
 │   ├── matriz-de-riscos.md
-│   └── matriz-de-cenarios.md
+│   ├── matriz-de-cenarios.md
+│   ├── relatorio-completo-do-projeto.md
+│   ├── relatorio-completo-do-projeto.docx
+│   └── relatorio-completo-do-projeto.pdf
 ├── src/
-│   ├── data/
-│   ├── fixtures/       # fixtures e captura de evidências por etapa
+│   ├── data/registration.ts
+│   ├── fixtures/
+│   │   ├── capturar-etapa.ts
+│   │   └── test.ts
 │   └── pages/
+│       ├── delayed-dropdown.page.ts
+│       ├── registration.page.ts
+│       └── users.page.ts
 ├── tests/
-│   ├── acessibilidade/
-│   ├── dinamicos/
-│   ├── formularios/
-│   ├── responsividade/
-│   └── usuarios/
+│   ├── acessibilidade/cadastro-acessibilidade.spec.ts
+│   ├── dinamicos/menu-suspenso-assincrono.spec.ts
+│   ├── formularios/cadastro.spec.ts
+│   ├── responsividade/usuarios-dispositivo-movel.spec.ts
+│   └── usuarios/usuarios.spec.ts
+├── .gitignore
 ├── package.json
 ├── playwright.config.ts
 └── tsconfig.json
@@ -134,6 +160,8 @@ As interações aguardam condições observáveis com as asserções auto-retry 
 Cada teste abre uma página e prepara seu próprio estado, sem depender de ordem de execução ou compartilhar estado entre cenários. O formulário recebe dados fictícios e não persistentes. A tabela usa registros apresentados pelo ambiente público; os testes filtram e validam resultados observáveis em vez de alterar seus dados.
 
 Os dados do formulário ficam em `src/data/registration.ts`; as interações são encapsuladas nos page objects de `src/pages/`.
+
+O helper `src/fixtures/capturar-etapa.ts` registra screenshots numeradas dos passos relevantes dos cenários. As imagens, os relatórios e demais evidências de execução ficam em `test-results/` ou `playwright-report/` e não são versionados.
 
 ## Decisões técnicas
 
