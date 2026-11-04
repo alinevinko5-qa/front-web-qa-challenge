@@ -124,8 +124,6 @@ Na execução manual (**Actions > Playwright tests > Run workflow**), é possív
 │   │   ├── capturar-etapa.ts
 │   │   └── test.ts
 │   └── pages/
-│       ├── delayed-dropdown.page.ts
-│       ├── registration.page.ts
 │       └── users.page.ts
 ├── Spec/
 │   ├── Acessibilidade/

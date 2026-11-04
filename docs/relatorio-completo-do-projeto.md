@@ -56,8 +56,6 @@ As justificativas e prioridades estão detalhadas na [matriz de cenários](./mat
 │   │   ├── capturar-etapa.ts
 │   │   └── test.ts
 │   └── pages/
-│       ├── delayed-dropdown.page.ts
-│       ├── registration.page.ts
 │       └── users.page.ts
 ├── Spec/
 │   ├── Acessibilidade/
@@ -86,8 +84,6 @@ As justificativas e prioridades estão detalhadas na [matriz de cenários](./mat
 | `src/fixtures/capturar-etapa.ts` | Cria screenshots numeradas das principais etapas de cada teste e amplia o limite de tempo para acomodar a captura. |
 | `src/fixtures/test.ts` | Estende as fixtures do Playwright com instâncias tipadas dos page objects, fornecidas por teste. Também exporta `expect`. |
 | `src/pages/users.page.ts` | Encapsula acesso à tabela, busca e leitura de célula associada ao cabeçalho. Normaliza indicadores de ordenação no texto dos cabeçalhos. |
-| `src/pages/registration.page.ts` | Encapsula interações reutilizáveis do formulário de cadastro. |
-| `src/pages/delayed-dropdown.page.ts` | Contém interações reutilizáveis para dropdown assíncrono; não há atualmente um spec E2E desse componente. |
 | `Spec/Acessibilidade/A11Y-03 - Validar a navegação por teclado.spec.ts` | Preenche e envia o formulário usando teclado e valida a confirmação. |
 | `Spec/Formularios/FRM-01 - Submeter o formulário com dados válidos.spec.ts` | Implementa cadastro válido. |
 | `Spec/Login/Validar login com sucesso.spec.ts` | Implementa login de demonstração e valida a mensagem de boas-vindas. |
