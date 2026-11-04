@@ -32,7 +32,7 @@ Comandos para Commit e Push
 git.cmd add .
 
 # 2. Cria o commit salvando as alterações com uma mensagem descritiva
-git.cmd commit -m "feat: adiciona teste automatizado de upload de arquivo"
+git commit -m "Inclusão de cenários e atualização de docs"
 
 # 3. Envia o commit para o repositório remoto (substitua 'main' ou 'master' pelo nome da sua branch, se necessário)
-git.cmd push origin main
+git push origin main
