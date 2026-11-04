@@ -78,7 +78,7 @@ Esses cenários poderão ser reavaliados conforme risco, estabilidade e custo de
 ## Estratégia de automação
 
 - Cada teste prepara seu próprio estado e não depende da ordem de execução.
-- Fixtures em `src/fixtures/` fornecem page objects reutilizáveis de `src/pages/`; os dados de demonstração ficam nos próprios specs.
+- A fixture `usersPage` em `src/fixtures/test.ts` fornece o page object `UsersPage`, definido em `src/pages/users.page.ts`; os dados de demonstração ficam nos próprios specs.
 - São usados `data-testid` fornecidos pela aplicação e, para acessibilidade, seletores por label e role.
 - A sincronização aguarda estados observáveis, como contagem de linhas e visibilidade de mensagens; não há esperas fixas.
 - O formulário utiliza dados fictícios. Não são necessários usuários, senhas ou segredos.
@@ -93,7 +93,7 @@ Esses cenários poderão ser reavaliados conforme risco, estabilidade e custo de
 | Nomes claros e asserções relevantes | Os títulos descrevem o comportamento, incluem os IDs do case e estão em português. As asserções verificam visibilidade, cabeçalhos, linhas, dados, mensagens de validação, seleção e estado acessível. |
 | Seletores sustentáveis e baixo acoplamento | São priorizados `data-testid` estáveis fornecidos pelo PlayLab e seletores semânticos para acessibilidade. A leitura de células resolve a coluna pelo cabeçalho, em vez de assumir uma coluna fixa. |
 | Sincronização por estado ou evento | As expectativas auto-retry do Playwright aguardam condições observáveis; não se usa `waitForTimeout`. |
-| Separação de responsabilidades e reutilização | Fixtures criam page objects; page objects encapsulam interações; e os testes expressam os fluxos. |
+| Separação de responsabilidades e reutilização | A fixture `usersPage` disponibiliza o page object da tabela; os specs descrevem os fluxos de teste. |
 | Configuração centralizada | `playwright.config.ts` define URL, projetos, resoluções, workers, retries, relatório e evidências. |
 | Dados de teste controlados | O cadastro usa dados fictícios; os registros da tabela vêm do PlayLab público e não são alterados pela suíte. |
 | Tratamento de falhas | As asserções do Playwright falham explicitamente quando o comportamento esperado não ocorre. Screenshots apoiam o diagnóstico. |

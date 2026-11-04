@@ -137,7 +137,7 @@ Na execução manual (**Actions > Playwright tests > Run workflow**), é possív
 └── tsconfig.json
 ```
 
-`src/fixtures/` fornece fixtures tipadas e o helper de captura das etapas; `src/pages/` encapsula interações reutilizadas com tabela e cadastro. Os testes ficam organizados por jornada/categoria em `Spec/`. A configuração compartilhada de navegadores, URL, concorrência e relatório fica em `playwright.config.ts`.
+`src/fixtures/` fornece a fixture tipada `usersPage` e o helper de captura de etapas; `src/pages/users.page.ts` encapsula as interações reutilizadas com a tabela. Os testes ficam organizados por jornada/categoria em `Spec/`. A configuração compartilhada de navegadores, URL, concorrência e relatório fica em `playwright.config.ts`.
 
 ## Estratégia de seletores
 

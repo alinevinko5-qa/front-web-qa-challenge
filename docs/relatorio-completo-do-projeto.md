@@ -82,7 +82,7 @@ As justificativas e prioridades estão detalhadas na [matriz de cenários](./mat
 | `docs/matriz-de-riscos.md` | Descreve riscos, impacto, probabilidade, prioridade, cenários relacionados, mitigação e critérios da priorização. |
 | `docs/relatorio-completo-do-projeto.md` | Este relatório explicativo, com a visão consolidada do projeto e de seus arquivos. |
 | `src/fixtures/capturar-etapa.ts` | Cria screenshots numeradas das principais etapas de cada teste e amplia o limite de tempo para acomodar a captura. |
-| `src/fixtures/test.ts` | Estende as fixtures do Playwright com instâncias tipadas dos page objects, fornecidas por teste. Também exporta `expect`. |
+| `src/fixtures/test.ts` | Estende o Playwright com a fixture tipada `usersPage`. Também exporta `expect`. |
 | `src/pages/users.page.ts` | Encapsula acesso à tabela, busca e leitura de célula associada ao cabeçalho. Normaliza indicadores de ordenação no texto dos cabeçalhos. |
 | `Spec/Acessibilidade/A11Y-03 - Validar a navegação por teclado.spec.ts` | Preenche e envia o formulário usando teclado e valida a confirmação. |
 | `Spec/Formularios/FRM-01 - Submeter o formulário com dados válidos.spec.ts` | Implementa cadastro válido. |
@@ -100,11 +100,11 @@ O fluxo geral de execução é:
 
 1. O Playwright lê `playwright.config.ts` e descobre os projetos e testes.
 2. Cada teste recebe uma `page` isolada; os specs que precisam de suporte compartilhado usam as fixtures em `src/fixtures/test.ts`.
-3. Os specs podem chamar page objects de `src/pages/`, que concentram interações reutilizáveis.
+3. O spec mobile usa a fixture `usersPage`, que fornece o page object de tabela em `src/pages/users.page.ts`.
 4. As asserções Playwright verificam estados visíveis, valores e mensagens observáveis.
 5. O reporter HTML e as opções de evidência guardam os resultados em `playwright-report/` e `test-results/`.
 
-Essa divisão deixa os arquivos de teste focados na intenção do cenário; os page objects e fixtures compartilhados apoiam apenas os specs que os utilizam. Os dados de demonstração são declarados nos próprios specs.
+Essa divisão deixa os arquivos de teste focados na intenção do cenário; a fixture e o page object de tabela são usados pelo spec mobile que precisa dessas interações. Os dados de demonstração são declarados nos próprios specs.
 
 ## 6. Configuração e execução local
 
