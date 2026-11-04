@@ -6,7 +6,7 @@
 
 ## 1. Resumo executivo
 
-O projeto automatiza fluxos selecionados de uma aplicação web pública. A suíte atual contém **10 testes independentes**: nove cenários desktop executados em Chromium e Firefox e um cenário mobile executado em Chromium emulado como Pixel 7, totalizando 19 execuções.
+O projeto automatiza fluxos selecionados de uma aplicação web pública. A suíte atual contém **12 testes independentes**: 11 cenários desktop executados em Chromium e Firefox e um cenário mobile executado em Chromium emulado como Pixel 7, totalizando 23 execuções.
 
 A configuração centralizada gera relatório HTML e screenshot ao final de cada teste; o spec mobile também salva capturas em etapas relevantes. Trace e vídeo estão desativados na configuração atual. O workflow do GitHub Actions executa a suíte em push, pull request ou solicitação manual e publica os resultados como artefato temporário.
 
@@ -28,13 +28,15 @@ O objetivo é validar comportamentos observáveis da interface e demonstrar uma 
 | USR-05 | Filtro de tabela | Filtro por função `Viewer`. |
 | USR-06 | Paginação | Navegação entre páginas e retorno à primeira. |
 | RSP-02/USR-03 | Responsividade — mobile | Busca de Alice em viewport Pixel 7 emulado, de 412 × 839, usando Chromium. |
+| DYN-02 | Componente dinâmico | Configuração de atraso e validação da exibição do conteúdo carregado. O spec não seleciona uma opção carregada dinamicamente. |
+| UP-01 | Upload | Envio de `fixtures/teste.txt` e validação da mensagem de sucesso. |
 | Transversal | Relatório e evidências | Reporter HTML e screenshots; publicação do log e artefatos da pipeline por 14 dias. Trace e vídeo estão desativados. |
 
-O total é de 10 testes: nove testes desktop executados em dois navegadores (18 execuções) e um teste mobile, totalizando **19 combinações de teste/projeto**.
+O total é de 12 testes: 11 testes desktop executados em dois navegadores (22 execuções) e um teste mobile, totalizando **23 combinações de teste/projeto**.
 
 ### Cenários não implementados nesta etapa
 
-Ficam fora da cobertura atual: ordenação, status e ação na tabela (USR-07/08); validação negativa, limites e reset do formulário (FRM-02/03/04/05/06/08); testes E2E de dropdown assíncrono (DYN-01/02); sobreposição, scroll horizontal e acesso a todas as ações mobile (RSP-03/04/05); verificações ampliadas de acessibilidade (A11Y-01/02/04/05/06/07); upload, drag-and-drop, iframes, API, carga e stress.
+Ficam fora da cobertura atual: ordenação, status e ação na tabela (USR-07/08); validação negativa, limites e reset do formulário (FRM-02/03/04/05/06/08); DYN-01 e seleção de opção realmente carregada de forma dinâmica; sobreposição, scroll horizontal e acesso a todas as ações mobile (RSP-03/04/05); verificações ampliadas de acessibilidade (A11Y-01/02/04/05/06/07); rejeição de arquivos inválidos, drag-and-drop, iframes, API, carga e stress.
 
 As justificativas e prioridades estão detalhadas na [matriz de cenários](./matriz-de-cenarios.md), na [matriz de riscos](./matriz-de-riscos.md) e na [estratégia de testes](./estrategia-de-testes.md).
 
@@ -51,6 +53,8 @@ As justificativas e prioridades estão detalhadas na [matriz de cenários](./mat
 │   ├── matriz-de-cenarios.md
 │   ├── matriz-de-riscos.md
 │   └── relatorio-completo-do-projeto.md
+├── fixtures/
+│   └── teste.txt
 ├── src/
 │   ├── fixtures/
 │   │   ├── capturar-etapa.ts
@@ -59,9 +63,11 @@ As justificativas e prioridades estão detalhadas na [matriz de cenários](./mat
 │       └── users.page.ts
 ├── Spec/
 │   ├── Acessibilidade/
+│   ├── Componentes dinâmicos e ou assíncronos/
 │   ├── Formularios/
 │   ├── Login/
 │   ├── Responsividade/
+│   ├── Upload de Arquivo/
 │   └── User Management/
 ├── .gitignore
 ├── package.json
@@ -88,6 +94,9 @@ As justificativas e prioridades estão detalhadas na [matriz de cenários](./mat
 | `Spec/Formularios/FRM-01 - Submeter o formulário com dados válidos.spec.ts` | Implementa cadastro válido. |
 | `Spec/Login/Validar login com sucesso.spec.ts` | Implementa login de demonstração e valida a mensagem de boas-vindas. |
 | `Spec/Responsividade/Pesquisa usuário válido em dispositivo móvel.spec.ts` | Executa a busca na resolução mobile Pixel 7 emulada (RSP-02/USR-03). |
+| `Spec/Componentes dinâmicos e ou assíncronos/DYN-02 - Selecionar uma opção carregada dinamicamente.spec.ts` | Configura o atraso da operação e valida o conteúdo após o carregamento; atualmente não seleciona uma opção carregada dinamicamente. |
+| `Spec/Upload de Arquivo/UP-01 - Validar upload de arquivo com sucesso.spec.ts` | Envia `fixtures/teste.txt` com `setInputFiles` e valida a mensagem de sucesso do upload. |
+| `fixtures/teste.txt` | Arquivo usado como entrada pelo cenário de upload UP-01. |
 | `Spec/User Management/` | Contém os cenários independentes USR-01 a USR-06 para navegação, estrutura, busca, filtro e paginação. |
 | `package.json` | Declara scripts, dependências e metadados do projeto. |
 | `package-lock.json` | Fixa a árvore resolvida das dependências para instalação reproduzível com `npm ci`. |
@@ -189,7 +198,7 @@ Em execução manual, os inputs permitem selecionar `all`, `chromium`, `firefox`
 
 ## 11. Validação
 
-O comando `npx playwright test --list` descobre 10 specs e 19 combinações teste/projeto. `npm run typecheck` verifica a configuração, os arquivos de suporte e os specs em `Spec/`. A listagem confirma descoberta dos testes; não substitui a execução completa da suíte.
+O comando `npx playwright test --list` descobre 12 specs e 23 combinações teste/projeto. `npm run typecheck` verifica a configuração, os arquivos de suporte e os specs em `Spec/`. A listagem confirma descoberta dos testes; não substitui a execução completa da suíte.
 
 ## 12. Limitações conhecidas
 
@@ -203,7 +212,7 @@ O comando `npx playwright test --list` descobre 10 specs e 19 combinações test
 ## 13. Próximos passos recomendados
 
 1. Executar a suíte completa e revisar relatório HTML e screenshots; investigar falhas externas separadamente de regressões.
-2. Ampliar a cobertura com ordenação, validações negativas de formulário e testes E2E para o dropdown assíncrono.
+2. Ampliar a cobertura com ordenação, validações negativas de formulário, espera e seleção de opções do dropdown assíncrono e rejeição de arquivos inválidos.
 3. Considerar verificações de layout e ações adicionais em mobile.
 4. Complementar o teste de teclado com análise de acessibilidade automatizada e revisão manual.
 

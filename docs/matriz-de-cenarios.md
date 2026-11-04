@@ -1,6 +1,6 @@
 # Matriz de cenários
 
-A suíte atual contém 10 testes independentes: nove cenários desktop executados em Chromium e Firefox e um cenário mobile em Chromium emulado, totalizando 19 execuções.
+A suíte atual contém 12 testes independentes: 11 cenários desktop executados em Chromium e Firefox e um cenário mobile em Chromium emulado, totalizando 23 execuções.
 
 | ID | Jornada | Descrição | Tipo de teste | Risco protegido | Automatizar? | Status |
 |---|---|---|---|---|---|---|
@@ -14,14 +14,16 @@ A suíte atual contém 10 testes independentes: nove cenários desktop executado
 | USR-05 | Usuários | Filtrar a tabela pela função Viewer | E2E desktop | Filtro por função incorreto | Sim | Implementado |
 | USR-06 | Usuários | Navegar entre as páginas 1, 2 e 3 | E2E desktop | Paginação não atualiza a página ativa | Sim | Implementado |
 | RSP-02/USR-03 | Usuários mobile | Repetir a busca por Alice em Pixel 7 emulado e validar a linha | E2E mobile | Busca indisponível em viewport estreita | Sim | Implementado |
+| DYN-02 | Componentes dinâmicos | Configurar o atraso e aguardar a exibição de conteúdo | E2E assíncrono | Conteúdo não aparece após o carregamento | Sim | Implementado; o spec não valida seleção de opção dinâmica |
+| UP-01 | Upload | Enviar `fixtures/teste.txt` e validar a mensagem de sucesso | E2E upload | Upload de arquivo válido não conclui | Sim | Implementado |
 | USR-07/08 | Usuários | Validar status e executar ação na tabela | E2E desktop | Status ou ação incorretos | Sim | Fora do escopo atual |
 | FRM-02/03/04/05/06/08 | Cadastro | Validar submissão vazia, e-mail inválido, limites e reset | E2E desktop | Validações complementares ausentes | Sim | Fora do escopo atual |
-| DYN-01/02 | Componentes dinâmicos | Aguardar opções do dropdown e selecionar uma opção | E2E assíncrono | Dropdown não carrega ou não seleciona | Sim | Fora do escopo atual |
+| DYN-01 | Componentes dinâmicos | Aguardar o carregamento de um dropdown assíncrono | E2E assíncrono | Dropdown não carrega | Sim | Fora do escopo atual |
 | A11Y-01/02/04/05/06/07 | Acessibilidade | Verificar labels, foco, títulos, análise automatizada e modal | Acessibilidade | Barreiras além do fluxo de teclado não detectadas | Sim | Fora do escopo atual |
 | RSP-03/04/05 | Usuários mobile | Verificar sobreposição, scroll horizontal e acesso a ações | E2E mobile | Conteúdo ou ações inacessíveis em telas estreitas | Sim | Fora do escopo atual |
-| UPL-01/02 | Upload | Aceitar arquivo permitido e rejeitar extensão não suportada | E2E upload | Upload inválido ou quebrado | Não | Fora do escopo |
+| UP-02 | Upload | Rejeitar arquivo com extensão não suportada | E2E upload | Upload inválido é aceito | Sim | Fora do escopo atual |
 
-O teste USR-05, apesar do nome do arquivo mencionar ordenação, atualmente seleciona o filtro `Viewer`. A ordenação não está coberta. O teste A11Y-03 exercita um fluxo de cadastro por teclado, mas não é uma auditoria completa de acessibilidade.
+O teste USR-05, apesar do nome do arquivo mencionar ordenação, atualmente seleciona o filtro `Viewer`. A ordenação não está coberta. O teste A11Y-03 exercita um fluxo de cadastro por teclado, mas não é uma auditoria completa de acessibilidade. O spec DYN-02 configura um atraso e espera conteúdo; apesar do nome do arquivo, não seleciona uma opção carregada dinamicamente.
 
 ## Frequência
 

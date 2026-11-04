@@ -11,9 +11,10 @@
 | RSK-07 | Ambiente externo | Instabilidade de rede, terceiros ou mudanças do PlayLab causam falhas sem regressão no projeto | Médio | Média | P1 | Todos | Usar sincronização por estado e limitar a execução a dois workers; a disponibilidade do site não é controlável |
 | RSK-08 | Responsividade | A jornada de busca fica indisponível em viewport mobile | Médio | Média | P1 | RSP-02/USR-03 | Executar pesquisa em Chromium emulado como Pixel 7 |
 | RSK-09 | Cobertura funcional | Ordenação, status, edição e validações negativas de cadastro não são exercitados | Médio | Média | P2 | USR-07/08, FRM-02/03/04/05/06/08 | Registrados para cobertura futura |
-| RSK-10 | Componentes dinâmicos | O dropdown não carrega ou não permite selecionar opções | Médio | Média | P2 | DYN-01/02 | Cenário ainda não está na suíte atual |
+| RSK-10 | Componentes dinâmicos | Conteúdo assíncrono não aparece após o atraso configurado | Médio | Média | P2 | DYN-02 | Aguardar a mensagem de conteúdo carregado após iniciar a operação |
 | RSK-11 | Responsividade | Sobreposição, scroll horizontal ou ações inacessíveis em telas estreitas | Médio | Média | P2 | RSP-03/04/05 | A suíte cobre a busca; inspeção visual e demais ações ficam para etapa futura |
 | RSK-12 | Acessibilidade | Barreiras além do fluxo de teclado não são identificadas | Médio | Média | P2 | A11Y-01/02/04/05/06/07 | Labels, foco, leitores de tela, contraste e análise automatizada precisam de cobertura adicional |
+| RSK-13 | Upload | Um arquivo válido não é aceito ou a confirmação não é exibida | Médio | Média | P2 | UP-01 | Enviar `fixtures/teste.txt` e validar a confirmação de sucesso |
 
 ## Critérios
 
@@ -29,4 +30,4 @@ A prioridade orienta a ordem da cobertura; não substitui análise contextual ne
 
 ## Riscos fora da suíte atual
 
-Ordenação, status e ações da tabela; validações negativas e limites do formulário; dropdown assíncrono; verificações adicionais de acessibilidade e layout mobile; upload; e testes de carga, stress e segurança ainda não fazem parte da suíte.
+Ordenação, status e ações da tabela; validações negativas e limites do formulário; seleção de uma opção realmente carregada de forma dinâmica; verificações adicionais de acessibilidade e layout mobile; rejeição de arquivos inválidos; e testes de carga, stress e segurança ainda não fazem parte da suíte.

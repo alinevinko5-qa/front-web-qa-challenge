@@ -2,7 +2,7 @@
 
 ## Descrição da solução
 
-Projeto de automação end-to-end (E2E) para validar fluxos funcionais da aplicação web PlayLab. A suíte contém 10 testes independentes: nove cenários desktop executados em Chromium e Firefox e um cenário de busca mobile em Chromium emulado, totalizando 19 execuções nos projetos configurados.
+Projeto de automação end-to-end (E2E) para validar fluxos funcionais da aplicação web PlayLab. A suíte contém 12 testes independentes: 11 cenários desktop executados em Chromium e Firefox e um cenário de busca mobile em Chromium emulado, totalizando 23 execuções nos projetos configurados.
 
 ## Aplicação utilizada
 
@@ -13,6 +13,8 @@ Projeto de automação end-to-end (E2E) para validar fluxos funcionais da aplica
 - Login com sucesso e cadastro válido (FRM-01), incluindo cadastro por teclado (A11Y-03).
 - Tabela de usuários: navegação até a tabela, validação de cabeçalhos, busca positiva e negativa, filtro por função e paginação (USR-01 a USR-06).
 - Pesquisa de usuário em viewport mobile Pixel 7, alinhada ao cenário USR-03 (RSP-02).
+- Componentes dinâmicos: aguardar a exibição de conteúdo após configurar um atraso (DYN-02).
+- Upload: enviar um arquivo de texto de teste e validar a confirmação (UP-01), usando `fixtures/teste.txt`.
 - Compatibilidade desktop em Chromium e Firefox; a cobertura mobile é executada em Chromium emulado.
 - Relatório HTML e screenshots; a pipeline publica os resultados e o log de execução.
 
@@ -56,14 +58,18 @@ Execute todos os projetos configurados ou valide os tipos:
 
 ```bash
 npm test
+npm run lint
 npm run typecheck
+npm run check
 ```
 
 No PowerShell do Windows, execute os mesmos scripts usando `npm.cmd`:
 
 ```powershell
 npm.cmd test
+npm.cmd run lint
 npm.cmd run typecheck
+npm.cmd run check
 ```
 
 Para executar contra outro ambiente compatível sem arquivo `.env`, defina `BASE_URL` antes do comando. No PowerShell:
@@ -74,6 +80,12 @@ npm.cmd test
 ```
 
 Os demais comandos (`npm run test:chromium`, `npm run test:firefox`, `npm run test:mobile`, `npm run test:ui` e `npm run report`) também podem ser chamados como `npm.cmd run ...` no PowerShell. Em terminais macOS/Linux, use `npm` e `npx` sem o sufixo `.cmd`.
+
+Para executar somente um cenário, filtre pelo ID:
+
+```powershell
+npm.cmd run test:chromium -- --grep "UP-01"
+```
 
 Não são necessários usuários, senhas ou segredos para os cenários implementados.
 
@@ -125,11 +137,15 @@ Na execução manual (**Actions > Playwright tests > Run workflow**), é possív
 │   │   └── test.ts
 │   └── pages/
 │       └── users.page.ts
+├── fixtures/
+│   └── teste.txt
 ├── Spec/
 │   ├── Acessibilidade/
+│   ├── Componentes dinâmicos e ou assíncronos/
 │   ├── Formularios/
 │   ├── Login/
 │   ├── Responsividade/
+│   ├── Upload de Arquivo/
 │   └── User Management/
 ├── .gitignore
 ├── package.json
@@ -137,7 +153,7 @@ Na execução manual (**Actions > Playwright tests > Run workflow**), é possív
 └── tsconfig.json
 ```
 
-`src/fixtures/` fornece a fixture tipada `usersPage` e o helper de captura de etapas; `src/pages/users.page.ts` encapsula as interações reutilizadas com a tabela. Os testes ficam organizados por jornada/categoria em `Spec/`. A configuração compartilhada de navegadores, URL, concorrência e relatório fica em `playwright.config.ts`.
+`src/fixtures/` fornece a fixture tipada `usersPage` e o helper de captura de etapas; `src/pages/users.page.ts` encapsula as interações reutilizadas com a tabela. O arquivo `fixtures/teste.txt` é o arquivo de entrada do cenário de upload UP-01. Os testes ficam organizados por jornada/categoria em `Spec/`. A configuração compartilhada de navegadores, URL, concorrência e relatório fica em `playwright.config.ts`.
 
 ## Estratégia de seletores
 
@@ -176,7 +192,7 @@ O Copilot foi usado como apoio para estruturar os testes, documentação e workf
 1. Acompanhar execuções da pipeline e revisar flakiness e mudanças no site.
 2. Avaliar axe-core e triagem dos resultados de acessibilidade.
 3. Ampliar cenários de teclado e complementar com avaliação manual usando tecnologia assistiva.
-4. Considerar upload e outros componentes depois de avaliar risco e estabilidade.
+4. Ampliar a cobertura de componentes dinâmicos para incluir a seleção de opções realmente carregadas e de upload para rejeitar arquivos não suportados.
 5. Avaliar mais viewports ou aparelhos físicos para a cobertura mobile.
 
-Não há `test-assets/` nesta versão porque nenhum cenário realiza upload de arquivos.
+O cenário UP-01 utiliza `fixtures/teste.txt`; não há diretório `test-assets/` nesta versão.

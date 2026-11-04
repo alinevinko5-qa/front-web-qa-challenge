@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 
 test('Navegar até a seção Tables no Playwright Lab', async ({ page }) => {
   // 1. Navega até a página informada com o fragmento

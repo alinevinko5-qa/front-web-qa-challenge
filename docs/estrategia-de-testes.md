@@ -2,29 +2,33 @@
 
 ## Objetivo
 
-Validar fluxos funcionais da aplicação pública [PlayLab — Playwright Practice Arena](https://playwrightlab.github.io/) com testes end-to-end em Playwright e TypeScript. A suíte cobre login, cadastro, gerenciamento de usuários, teclado e uma busca em viewport mobile.
+Validar fluxos funcionais da aplicação pública [PlayLab — Playwright Practice Arena](https://playwrightlab.github.io/) com testes end-to-end em Playwright e TypeScript. A suíte cobre login, cadastro, gerenciamento de usuários, teclado, componentes dinâmicos, upload e uma busca em viewport mobile.
 
 ## Escopo
 
-O escopo atual contém 10 testes independentes:
+O escopo atual contém 12 testes independentes:
 
 - **Login:** autenticação de demonstração e mensagem de boas-vindas.
 - **Formulário:** cadastro válido por preenchimento de campos (FRM-01) e por navegação com teclado (A11Y-03).
 - **Usuários:** navegação até a tabela (USR-01), validação de estrutura/cabeçalhos (USR-02), busca positiva (USR-03), busca sem resultados (USR-04), filtro por função (USR-05) e paginação (USR-06).
 - **Responsividade:** busca de Alice em Chromium emulado como Pixel 7 (RSP-02/USR-03).
-- **Compatibilidade:** nove testes desktop em Chromium e Firefox e o teste mobile em Chromium emulado; 19 execuções no total.
+- **Componentes dinâmicos:** aguardar a mensagem de conteúdo após configurar um atraso (DYN-02). O teste não seleciona uma opção carregada dinamicamente, embora o nome do arquivo sugira esse comportamento.
+- **Upload:** enviar `fixtures/teste.txt` e validar o sucesso do upload (UP-01).
+- **Compatibilidade:** 11 testes desktop em Chromium e Firefox e o teste mobile em Chromium emulado; 23 execuções no total.
 - **Relatórios:** reporter HTML e screenshots; o workflow também publica o log da execução.
 
 ## Entregáveis obrigatórios (requisito 9.1)
 
 | Entregável | Cobertura nesta solução |
 |---|---|
-| Testes automatizados | Dez testes independentes em dez arquivos de especificação. |
+| Testes automatizados | Doze testes independentes em doze arquivos de especificação. |
 | Jornada da tabela de usuários | Testes separados cobrem navegação, cabeçalhos, busca positiva e negativa, filtro por função e paginação (USR-01 a USR-06). |
 | Cenário de formulário | Cadastro válido (FRM-01) e cadastro preenchido por teclado (A11Y-03). |
 | Login | Login de demonstração com validação da mensagem de boas-vindas. |
 | Acessibilidade/teclado | Preenchimento do formulário via teclado e envio com Enter (A11Y-03); não é auditoria WCAG. |
 | Execução mobile | Busca por Alice em Chromium emulado como Pixel 7, viewport 412 × 839 (RSP-02/USR-03). |
+| Componentes dinâmicos | Aguardar a exibição de conteúdo após configurar um atraso (DYN-02); seleção de uma opção carregada dinamicamente ainda não coberta. |
+| Upload | Envio de arquivo de texto de teste e validação da mensagem de sucesso (UP-01). |
 | Mais de um navegador | Chromium e Firefox para os cenários desktop; projeto mobile separado em Chromium emulado. |
 | Relatório e evidências | Reporter HTML, screenshot ao final de cada teste e log da suíte; traces e vídeos estão desativados. Artefatos da pipeline ficam disponíveis por 14 dias. |
 
@@ -33,6 +37,7 @@ O escopo atual contém 10 testes independentes:
 1. **Gerenciamento de usuários:** navegar até a tabela, conferir cabeçalhos, pesquisar resultados existentes e inexistentes, filtrar por função e navegar entre páginas. Ordenação e edição não são cobertas.
 2. **Cadastro e login:** preencher e enviar o formulário com dados de demonstração; há também um fluxo de cadastro usando teclado e Enter. A suíte não cobre validação de e-mail inválido.
 3. **Uso mobile:** repetir a busca de Alice em viewport Pixel 7 e confirmar a linha e o e-mail esperados.
+4. **Componentes dinâmicos e upload:** aguardar a exibição de conteúdo após um atraso e enviar o arquivo `fixtures/teste.txt`, validando o sucesso.
 
 A suíte distribui os cenários da tabela em testes independentes. USR-05 filtra por função e USR-06 valida a navegação de páginas; ordenação e edição ainda não estão cobertas. Os fluxos de login, cadastro e responsividade também são testes separados.
 
@@ -57,8 +62,10 @@ O cenário **A11Y-03** preenche e envia o formulário usando teclado, incluindo 
 | Usuários | USR-05: filtrar pela função Viewer | Filtro por função incorreto | Médio | P1 | Sim | Confirma que o filtro apresenta a função selecionada. |
 | Usuários | USR-06: navegar entre páginas | Paginação não atualiza a página ativa | Médio | P1 | Sim | Valida alternância entre páginas e retorno à primeira. |
 | Usuários em mobile | RSP-02/USR-03: pesquisar Alice no Pixel 7 emulado | Busca indisponível em viewport estreita | Médio | P1 | Sim | Confirma busca, linha e e-mail em viewport mobile. |
+| Componentes dinâmicos | DYN-02: aguardar a exibição de conteúdo após configurar um atraso | Conteúdo não aparece após o carregamento | Médio | P2 | Sim | Aguarda a mensagem observável do componente; não seleciona opção dinâmica. |
+| Upload | UP-01: enviar `fixtures/teste.txt` | Upload de arquivo válido não conclui | Médio | P2 | Sim | Valida o envio do arquivo e a mensagem de sucesso. |
 | Aplicação externa | Disponibilidade do PlayLab e serviços de terceiros | Falhas externas interrompem a execução sem regressão no projeto | Médio | P1 | Parcial | A disponibilidade do site não é controlável pela suíte. |
-| Cenários futuros | Ordenação, edição, validação negativa de formulário, demais aspectos mobile e acessibilidade | Regressões em funcionalidades ainda não cobertas | Médio | P2 | Não | Podem ser priorizados em uma etapa posterior. |
+| Cenários futuros | Ordenação, edição, DYN-01, seleção de opção dinâmica, validação negativa de formulário, upload inválido, demais aspectos mobile e acessibilidade | Regressões em funcionalidades ainda não cobertas | Médio | P2 | Não | Podem ser priorizados em uma etapa posterior. |
 
 O impacto descreve a consequência para o usuário. As prioridades são qualitativas: **P0** protege fluxos centrais; **P1** cobre interações importantes e riscos transversais; **P2** representa funcionalidades complementares cujo custo não se justifica na primeira versão. A decisão considera também frequência de uso, possibilidade de regressão, estabilidade e custo de manutenção.
 
@@ -68,10 +75,10 @@ Ainda não estão cobertos pela suíte:
 
 - USR-07/08 — validação do status e ação na tabela; a ordenação também não está coberta;
 - FRM-02/03/04/05/06/08 — submissão vazia, e-mail inválido, limites e reset;
-- testes E2E do dropdown assíncrono (DYN-01/02) e outras variações dinâmicas;
+- DYN-01 — aguardar o carregamento de um dropdown assíncrono e DYN-02 — selecionar uma opção realmente carregada dinamicamente; o spec DYN-02 atual aguarda conteúdo após um atraso, sem selecionar uma opção dinâmica;
 - RSP-03/04/05 — sobreposição, scroll horizontal e acesso a todas as ações em mobile;
 - A11Y-01/02/04/05/06/07 — validações ampliadas de acessibilidade, como labels e análise automatizada;
-- upload, drag-and-drop, iframes, fluxos de compra e testes de API, carga, stress ou segurança.
+- rejeição de arquivos inválidos, drag-and-drop, iframes, fluxos de compra e testes de API, carga, stress ou segurança.
 
 Esses cenários poderão ser reavaliados conforme risco, estabilidade e custo de manutenção.
 
@@ -81,7 +88,9 @@ Esses cenários poderão ser reavaliados conforme risco, estabilidade e custo de
 - A fixture `usersPage` em `src/fixtures/test.ts` fornece o page object `UsersPage`, definido em `src/pages/users.page.ts`; os dados de demonstração ficam nos próprios specs.
 - São usados `data-testid` fornecidos pela aplicação e, para acessibilidade, seletores por label e role.
 - A sincronização aguarda estados observáveis, como contagem de linhas e visibilidade de mensagens; não há esperas fixas.
+- ESLint com regras recomendadas para TypeScript verifica os arquivos `.ts` com `npm run lint`.
 - O formulário utiliza dados fictícios. Não são necessários usuários, senhas ou segredos.
+- O cenário UP-01 envia `fixtures/teste.txt`; outras classes e extensões de arquivo ainda não são verificadas.
 - A execução é limitada a dois workers para reduzir a carga sobre o site público.
 - Uma screenshot é salva ao final de cada teste; o spec mobile também registra capturas de etapas. Trace e vídeo estão desativados. O relatório HTML é gerado a cada execução. O workflow registra a saída da suíte em `playwright-test.log` e publica os resultados como artefato por 14 dias.
 
@@ -131,7 +140,7 @@ O workflow `.github/workflows/playwright.yml` é acionado em `push`, `pull_reque
 
 **Saída**
 
-- A suíte contém 10 testes e 19 combinações teste/projeto (nove testes desktop em Chromium e Firefox; um teste mobile em Chromium).
+- A suíte contém 12 testes e 23 combinações teste/projeto (11 testes desktop em Chromium e Firefox; um teste mobile em Chromium).
 - Há uma screenshot por teste em `test-results/`; o spec mobile também salva capturas de etapas.
 - O workflow publica relatório, screenshots, resultados e `playwright-test.log` como artefato para download por 14 dias; esses arquivos não são versionados no repositório.
 - A verificação TypeScript (`npm run typecheck`) conclui sem erros.
@@ -149,5 +158,5 @@ Executar a suíte em pull requests e pushes pela pipeline. Durante investigaçã
 1. Acompanhar execuções da pipeline e revisar flakiness ou alterações de seletores.
 2. Adicionar axe-core e triagem explícita dos achados de acessibilidade.
 3. Ampliar navegação por teclado e complementar com validação manual usando tecnologia assistiva.
-4. Considerar cenários de upload e demais componentes após avaliar risco e estabilidade.
+4. Ampliar DYN-02 para selecionar uma opção carregada dinamicamente, adicionar DYN-01 e validar a rejeição de arquivos não suportados no fluxo de upload.
 5. Avaliar execução mobile em outros tamanhos e em dispositivos reais, se disponíveis.

@@ -1,0 +1,38 @@
+Comandos de Verificação e Qualidade (Lint & Check)
+# 1. Executa a análise estática de código (ESLint)
+npm.cmd run lint
+
+# 2. Executa a verificação de tipos (TypeScript)
+npm.cmd run check
+
+# 3. Lista e valida se os arquivos de teste carregam sem erros de sintaxe
+npx.cmd playwright test --list
+
+
+Comandos para Executar os Testes no Playwright
+
+# Roda todos os testes do projeto em segundo plano (headless)
+npx.cmd playwright test
+
+# Roda apenas o arquivo de teste específico de upload
+npx.cmd playwright test upload.spec.ts
+
+# Abre a interface gráfica interativa do Playwright (ideal para acompanhar a execução passo a passo)
+npx.cmd playwright test --ui
+
+# Roda os testes com o navegador visível na tela
+npx.cmd playwright test --headed
+
+# Executa o modo de depuração passo a passo (Debug Inspector)
+npx.cmd playwright test --debug
+
+Comandos para Commit e Push
+
+# 1. Adiciona todos os arquivos alterados (ou novos arquivos, como o seu teste) para a área de stage
+git.cmd add .
+
+# 2. Cria o commit salvando as alterações com uma mensagem descritiva
+git.cmd commit -m "feat: adiciona teste automatizado de upload de arquivo"
+
+# 3. Envia o commit para o repositório remoto (substitua 'main' ou 'master' pelo nome da sua branch, se necessário)
+git.cmd push origin main
