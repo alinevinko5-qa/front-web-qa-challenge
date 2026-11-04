@@ -22,6 +22,7 @@ test.describe('Testes de Cadastro via Teclado - Playwright Lab', () => {
     // 3. Password
     await page.keyboard.type('Password123');
     await page.keyboard.press('Tab');
+    await page.keyboard.press('Tab');
 
     // 4. Phone Number
     await page.keyboard.type('+1 (555) 11 973331234');
