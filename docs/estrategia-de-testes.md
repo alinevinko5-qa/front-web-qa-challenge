@@ -41,6 +41,12 @@ O escopo atual contém 12 testes independentes:
 
 A suíte distribui os cenários da tabela em testes independentes. USR-05 filtra por função e USR-06 valida a navegação de páginas; ordenação e edição ainda não estão cobertas. Os fluxos de login, cadastro e responsividade também são testes separados.
 
+## Estratégia de cobertura
+
+A cobertura prioriza jornadas críticas e combina cenários positivos e negativos quando aplicável. Login e cadastro verificam a conclusão bem-sucedida; a tabela cobre navegação, estrutura, busca com e sem resultado, filtro e paginação. O fluxo por teclado verifica o envio do cadastro com Enter. O cenário mobile repete a busca por Alice em viewport Pixel 7.
+
+Os cenários desktop são executados em Chromium e Firefox; a busca mobile roda em Chromium emulado. O teste DYN-02 verifica a exibição de conteúdo após um atraso, mas ainda não seleciona uma opção carregada dinamicamente. O UP-01 valida o envio de um arquivo de teste, enquanto rejeição de arquivos inválidos continua fora da cobertura. A matriz de cenários e riscos registra as lacunas e sua prioridade.
+
 ## Riscos identificados
 
 - **Funcionais:** tabela ausente ou incorreta; busca, filtro ou paginação inconsistentes; login ou cadastro válido que não concluem.
@@ -143,7 +149,7 @@ O workflow `.github/workflows/playwright.yml` é acionado em `push`, `pull_reque
 - A suíte contém 12 testes e 23 combinações teste/projeto (11 testes desktop em Chromium e Firefox; um teste mobile em Chromium).
 - Há uma screenshot por teste em `test-results/`; o spec mobile também salva capturas de etapas.
 - O workflow publica relatório, screenshots, resultados e `playwright-test.log` como artefato para download por 14 dias; esses arquivos não são versionados no repositório.
-- A verificação TypeScript (`npm run typecheck`) conclui sem erros.
+- `npm run check` conclui sem erros, validando ESLint e TypeScript.
 
 ## Limitações conhecidas
 
