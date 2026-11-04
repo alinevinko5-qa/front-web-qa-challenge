@@ -1,7 +1,7 @@
 {
   "name": "front-web-qa-challenge",
   "version": "1.0.0",
-  "description": "",
+  "description": "Desafio de automação de testes com Playwright e TypeScript",
   "main": "index.js",
   "scripts": {
     "test": "playwright test",
@@ -17,11 +17,11 @@
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "@playwright/test": "^1.64.1",
-    "@types/node": "^26.6.6",
-    "typescript": "^7.0.2"
+    "@playwright/test": "^1.49.0",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
   },
   "dependencies": {
-    "dotenv": "^18.0.9"
+    "dotenv": "^16.4.5"
   }
 }

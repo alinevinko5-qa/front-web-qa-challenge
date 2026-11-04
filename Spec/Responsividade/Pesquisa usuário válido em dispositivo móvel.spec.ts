@@ -2,7 +2,7 @@ import { expect, test } from '../../src/fixtures/test.js';
 import { criarCapturaDeEtapas } from '../../src/fixtures/capturar-etapa.js';
 
 test.describe('Jornada de usuários em dispositivo móvel', () => {
-  test('RSP-02: pesquisa usuários na resolução de dispositivo móvel emulado como Pixel 7', async ({ page, usersPage }, testInfo) => {
+  test('RSP-02/USR-03: pesquisa usuário válido em dispositivo móvel emulado como Pixel 7', async ({ page, usersPage }, testInfo) => {
     const capturarEtapa = criarCapturaDeEtapas(page, testInfo);
 
     // Acessa a aplicação no projeto configurado com o viewport mobile do Pixel 7.
@@ -14,10 +14,11 @@ test.describe('Jornada de usuários em dispositivo móvel', () => {
     await expect(usersPage.searchInput()).toBeVisible();
     await capturarEtapa('tabela-e-busca-visiveis');
 
-    // Pesquisa um usuário e valida o resultado apresentado na tabela mobile.
-    await usersPage.search('Alice Johnson');
+    // Repete a busca do USR-03 e valida o usuário correspondente na tabela mobile.
+    await usersPage.search('Alice');
 
     await expect(usersPage.rows).toHaveCount(1);
+    await expect(usersPage.table.getByRole('cell', { name: 'Alice Johnson' })).toBeVisible();
     await expect(usersPage.rows.first()).toContainText('alice@example.com');
     await capturarEtapa('resultado-da-busca');
   });

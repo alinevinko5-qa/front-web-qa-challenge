@@ -1,14 +1,14 @@
 # Relatório técnico completo — Front Web QA Challenge
 
-**Data do relatório:** 3 de novembro de 2026  
+**Data do relatório:** 4 de novembro de 2026
 **Projeto:** automação E2E da aplicação pública PlayLab  
 **Tecnologia principal:** Playwright Test com TypeScript
 
 ## 1. Resumo executivo
 
-O projeto automatiza fluxos selecionados de uma aplicação web pública para demonstrar cobertura funcional, validação de formulário, sincronização com componente assíncrono, acessibilidade básica e execução mobile. A suíte contém **seis testes lógicos independentes**, organizados em cinco arquivos de especificação. Os cinco cenários desktop executam em Chromium e Firefox; o cenário mobile executa em Chromium emulado como Pixel 7.
+O projeto automatiza fluxos selecionados de uma aplicação web pública. A suíte atual contém **10 testes independentes**: nove cenários desktop executados em Chromium e Firefox e um cenário mobile executado em Chromium emulado como Pixel 7, totalizando 19 execuções.
 
-A configuração centralizada gera relatório HTML e screenshot ao final de cada teste. Os cenários também salvam capturas nos principais passos da jornada para mostrar o estado antes e depois das interações. Em falhas, mantém trace e vídeo. O workflow do GitHub Actions executa a suíte em push, pull request ou solicitação manual e publica os resultados como artefato temporário.
+A configuração centralizada gera relatório HTML e screenshot ao final de cada teste; o spec mobile também salva capturas em etapas relevantes. Trace e vídeo estão desativados na configuração atual. O workflow do GitHub Actions executa a suíte em push, pull request ou solicitação manual e publica os resultados como artefato temporário.
 
 ## 2. Aplicação-alvo e objetivo
 
@@ -20,20 +20,21 @@ O objetivo é validar comportamentos observáveis da interface e demonstrar uma 
 
 | IDs | Grupo | O que o teste verifica |
 |---|---|---|
-| USR-01/02/03/04/07 | Jornada da tabela de usuários | Carregamento e cabeçalhos da tabela; busca de usuário existente e inexistente; dados e situação apresentados. |
-| FRM-01 | Formulário — cadastro válido | Preenchimento com dados fictícios válidos e confirmação de envio. |
-| FRM-03/06 | Formulário — cenário negativo | Rejeição de e-mail inválido, apresentação da mensagem de erro e ausência de confirmação de sucesso. |
-| DYN-01/02 | Componente dinâmico — dropdown assíncrono | Estado inicial desabilitado, carregamento das opções e seleção de uma opção disponível. |
-| FRM-07/A11Y-02 | Acessibilidade — labels e nomes acessíveis | Associação de labels aos campos obrigatórios e nome acessível do botão de cadastro. |
-| RSP-01 | Responsividade — desktop | Execução da cobertura de usuários em viewport desktop de 1280 × 720, em Chromium e Firefox. |
-| RSP-02 | Responsividade — mobile | Pesquisa de usuário em viewport Pixel 7 emulado, de 412 × 839, usando Chromium. |
-| Transversal | Relatório e evidências | Geração do relatório HTML e screenshots; retenção de trace e vídeo em falhas; publicação do log e dos artefatos da pipeline por 14 dias. |
+| Login | Login de demonstração | Validação da mensagem de boas-vindas após envio. |
+| FRM-01 | Formulário — cadastro válido | Preenchimento com dados fictícios válidos e confirmação. |
+| A11Y-03 | Cadastro por teclado | Preenchimento usando teclado e envio com Enter; não equivale a auditoria WCAG. |
+| USR-01/02 | Tabela de usuários | Navegação até a tabela e validação de checkbox e cabeçalhos. |
+| USR-03/04 | Pesquisa | Busca de Alice e validação de zero resultados para Bruno. |
+| USR-05 | Filtro de tabela | Filtro por função `Viewer`. |
+| USR-06 | Paginação | Navegação entre páginas e retorno à primeira. |
+| RSP-02/USR-03 | Responsividade — mobile | Busca de Alice em viewport Pixel 7 emulado, de 412 × 839, usando Chromium. |
+| Transversal | Relatório e evidências | Reporter HTML e screenshots; publicação do log e artefatos da pipeline por 14 dias. Trace e vídeo estão desativados. |
 
-O total é de seis testes lógicos: cinco testes desktop executados em dois navegadores (dez execuções) e um teste mobile (uma execução), totalizando **11 combinações de teste/projeto**.
+O total é de 10 testes: nove testes desktop executados em dois navegadores (18 execuções) e um teste mobile, totalizando **19 combinações de teste/projeto**.
 
 ### Cenários não implementados nesta etapa
 
-Foram documentados como adiados: ordenação, paginação e ação na tabela (USR-05/06/08); submissão vazia, limite de caracteres, reset e teclado no formulário (FRM-02/04/05/08); outros estados dinâmicos (DYN-03 a DYN-08); sobreposição, scroll horizontal e acesso a todas as ações no mobile (RSP-03/04/05); verificações ampliadas de acessibilidade (A11Y-01 e A11Y-03 a A11Y-07); upload, drag-and-drop, iframes, API, carga e stress.
+Ficam fora da cobertura atual: ordenação, status e ação na tabela (USR-07/08); validação negativa, limites e reset do formulário (FRM-02/03/04/05/06/08); testes E2E de dropdown assíncrono (DYN-01/02); sobreposição, scroll horizontal e acesso a todas as ações mobile (RSP-03/04/05); verificações ampliadas de acessibilidade (A11Y-01/02/04/05/06/07); upload, drag-and-drop, iframes, API, carga e stress.
 
 As justificativas e prioridades estão detalhadas na [matriz de cenários](./matriz-de-cenarios.md), na [matriz de riscos](./matriz-de-riscos.md) e na [estratégia de testes](./estrategia-de-testes.md).
 
@@ -51,8 +52,6 @@ As justificativas e prioridades estão detalhadas na [matriz de cenários](./mat
 │   ├── matriz-de-riscos.md
 │   └── relatorio-completo-do-projeto.md
 ├── src/
-│   ├── data/
-│   │   └── registration.ts
 │   ├── fixtures/
 │   │   ├── capturar-etapa.ts
 │   │   └── test.ts
@@ -60,17 +59,12 @@ As justificativas e prioridades estão detalhadas na [matriz de cenários](./mat
 │       ├── delayed-dropdown.page.ts
 │       ├── registration.page.ts
 │       └── users.page.ts
-├── tests/
-│   ├── acessibilidade/
-│   │   └── cadastro-acessibilidade.spec.ts
-│   ├── dinamicos/
-│   │   └── menu-suspenso-assincrono.spec.ts
-│   ├── formularios/
-│   │   └── cadastro.spec.ts
-│   ├── responsividade/
-│   │   └── usuarios-dispositivo-movel.spec.ts
-│   └── usuarios/
-│       └── usuarios.spec.ts
+├── Spec/
+│   ├── Acessibilidade/
+│   ├── Formularios/
+│   ├── Login/
+│   ├── Responsividade/
+│   └── User Management/
 ├── .gitignore
 ├── package.json
 ├── package-lock.json
@@ -89,33 +83,32 @@ As justificativas e prioridades estão detalhadas na [matriz de cenários](./mat
 | `docs/matriz-de-cenarios.md` | Relaciona IDs, jornada, descrição, tipo, risco protegido, prioridade, decisão de automatizar, justificativa e status. |
 | `docs/matriz-de-riscos.md` | Descreve riscos, impacto, probabilidade, prioridade, cenários relacionados, mitigação e critérios da priorização. |
 | `docs/relatorio-completo-do-projeto.md` | Este relatório explicativo, com a visão consolidada do projeto e de seus arquivos. |
-| `src/data/registration.ts` | Define o tipo `RegistrationData` e os dados fictícios válidos e inválidos usados nos testes de formulário. |
 | `src/fixtures/capturar-etapa.ts` | Cria screenshots numeradas das principais etapas de cada teste e amplia o limite de tempo para acomodar a captura. |
 | `src/fixtures/test.ts` | Estende as fixtures do Playwright com instâncias tipadas dos page objects, fornecidas por teste. Também exporta `expect`. |
 | `src/pages/users.page.ts` | Encapsula acesso à tabela, busca e leitura de célula associada ao cabeçalho. Normaliza indicadores de ordenação no texto dos cabeçalhos. |
-| `src/pages/registration.page.ts` | Encapsula navegação, preenchimento, envio do formulário e acesso às mensagens de erro e sucesso. |
-| `src/pages/delayed-dropdown.page.ts` | Encapsula acesso ao dropdown assíncrono, solicitação de carregamento e seleção de uma opção não vazia. Erra explicitamente se nenhuma opção estiver disponível. |
-| `tests/usuarios/usuarios.spec.ts` | Implementa a jornada selecionada da tabela (USR-01/02/03/04/07). |
-| `tests/formularios/cadastro.spec.ts` | Implementa envio válido e cenário negativo com validação do e-mail (FRM-01 e FRM-03/06). Um `beforeEach` abre a aplicação antes de cada cenário. |
-| `tests/dinamicos/menu-suspenso-assincrono.spec.ts` | Valida o carregamento por estado observável e a seleção do menu suspenso (DYN-01/02). |
-| `tests/acessibilidade/cadastro-acessibilidade.spec.ts` | Valida rótulos e nome acessível do botão (FRM-07/A11Y-02). |
-| `tests/responsividade/usuarios-dispositivo-movel.spec.ts` | Executa a pesquisa na resolução móvel configurada (RSP-02). |
+| `src/pages/registration.page.ts` | Encapsula interações reutilizáveis do formulário de cadastro. |
+| `src/pages/delayed-dropdown.page.ts` | Contém interações reutilizáveis para dropdown assíncrono; não há atualmente um spec E2E desse componente. |
+| `Spec/Acessibilidade/A11Y-03 - Validar a navegação por teclado.spec.ts` | Preenche e envia o formulário usando teclado e valida a confirmação. |
+| `Spec/Formularios/FRM-01 - Submeter o formulário com dados válidos.spec.ts` | Implementa cadastro válido. |
+| `Spec/Login/Validar login com sucesso.spec.ts` | Implementa login de demonstração e valida a mensagem de boas-vindas. |
+| `Spec/Responsividade/Pesquisa usuário válido em dispositivo móvel.spec.ts` | Executa a busca na resolução mobile Pixel 7 emulada (RSP-02/USR-03). |
+| `Spec/User Management/` | Contém os cenários independentes USR-01 a USR-06 para navegação, estrutura, busca, filtro e paginação. |
 | `package.json` | Declara scripts, dependências e metadados do projeto. |
 | `package-lock.json` | Fixa a árvore resolvida das dependências para instalação reproduzível com `npm ci`. |
-| `playwright.config.ts` | Centraliza URL-base, projetos de navegador, resolução, workers, retries, reporter e coleta de screenshots, traces e vídeos. |
-| `tsconfig.json` | Configura compilação/verificação TypeScript estrita sem emitir arquivos e inclui configuração, código de suporte e testes. |
+| `playwright.config.ts` | Centraliza URL-base, projetos de navegador, resolução, workers, retries, reporter e coleta de screenshots. Trace e vídeo estão desativados. |
+| `tsconfig.json` | Configura compilação/verificação TypeScript estrita sem emitir arquivos e inclui configuração, código de suporte e specs. |
 
 ## 5. Como o código se organiza
 
 O fluxo geral de execução é:
 
 1. O Playwright lê `playwright.config.ts` e descobre os projetos e testes.
-2. Cada teste recebe uma `page` isolada e as fixtures tipadas definidas em `src/fixtures/test.ts`.
-3. O teste chama o page object correspondente em `src/pages/`, que concentra seletores e interações da página.
+2. Cada teste recebe uma `page` isolada; os specs que precisam de suporte compartilhado usam as fixtures em `src/fixtures/test.ts`.
+3. Os specs podem chamar page objects de `src/pages/`, que concentram interações reutilizáveis.
 4. As asserções Playwright verificam estados visíveis, valores e mensagens observáveis.
 5. O reporter HTML e as opções de evidência guardam os resultados em `playwright-report/` e `test-results/`.
 
-Essa divisão deixa os arquivos de teste focados na intenção do cenário, e os page objects focados em interações reutilizáveis. Os dados fictícios de cadastro ficam fora da lógica de interação.
+Essa divisão deixa os arquivos de teste focados na intenção do cenário; os page objects e fixtures compartilhados apoiam apenas os specs que os utilizam. Os dados de demonstração são declarados nos próprios specs.
 
 ## 6. Configuração e execução local
 
@@ -156,7 +149,7 @@ Para configurar outro ambiente compatível, ajuste `BASE_URL` no arquivo `.env` 
 |---|---|---|---|
 | `chromium` | Chromium desktop | 1280 × 720 | Todos os cenários desktop; exclui a especificação mobile. |
 | `firefox` | Firefox desktop | 1280 × 720 | Todos os cenários desktop; exclui a especificação mobile. |
-| `mobile-chromium` | Chromium com emulação Pixel 7 | 412 × 839 | Especificação `tests/responsividade/`. |
+| `mobile-chromium` | Chromium com emulação Pixel 7 | 412 × 839 | Spec `Spec/Responsividade/`. |
 
 Chromium cobre o navegador principal; Firefox fornece um segundo mecanismo de navegador. A cobertura mobile fica separada em Chromium emulado para limitar o número de combinações. A emulação não substitui aparelho físico.
 
@@ -166,17 +159,17 @@ Chromium cobre o navegador principal; Firefox fornece um segundo mecanismo de na
 - Títulos em português, com IDs do case e comportamento esperado.
 - Asserções ligadas ao resultado funcional, não apenas à execução de cliques.
 - Seletores prioritariamente por `data-testid`; seletores semânticos (`getByLabel`, `getByRole`) na validação de acessibilidade.
-- Leitura de células por cabeçalho, ignorando os símbolos de ordenação (`↕`, `↑`, `↓`) no nome acessível do cabeçalho.
+- Seletores da tabela identificam colunas e linhas por `data-testid` e roles acessíveis.
 - Sincronização por expectativas auto-retry, como visibilidade, habilitação e quantidade de linhas; sem `waitForTimeout`.
-- Dados de cadastro fictícios e determinísticos; a tabela pertence ao ambiente público e não é alterada pelos testes implementados.
-- Erros explícitos quando cabeçalho ou opção de dropdown necessária não é encontrada; sem captura genérica ou fallback silencioso.
+- Dados de cadastro fictícios; a tabela pertence ao ambiente público e não é alterada pelos testes implementados.
+- Asserções falham explicitamente quando o comportamento esperado não ocorre.
 - Dois workers para equilibrar duração e carga no site externo.
 
-## 9. Relatórios, screenshots, traces e logs
+## 9. Relatórios, screenshots e logs
 
 - Reporter HTML: `playwright-report/`.
 - Screenshots: `screenshot: 'on'` guarda uma captura ao fim de cada teste; `src/fixtures/capturar-etapa.ts` também grava imagens numeradas das principais etapas em `test-results/`.
-- Trace e vídeo: `retain-on-failure`, preservados em falhas para diagnóstico.
+- Trace e vídeo: desativados (`trace: 'off'`, `video: 'off'`).
 - Log da pipeline: `playwright-test.log`, mostrado na saída do workflow e incluído no artefato.
 - Retenção de artefatos GitHub Actions: 14 dias.
 - `test-results/`, `playwright-report/` e o log são ignorados pelo Git para evitar versionar dados temporários ou pesados.
@@ -194,34 +187,29 @@ O workflow `.github/workflows/playwright.yml` roda em `push`, `pull_request` e `
 3. Instalação reproduzível com `npm ci`.
 4. Instalação de Chromium e Firefox, incluindo dependências do sistema operacional.
 5. Execução da suíte, mantendo o código de falha do Playwright com `set -o pipefail`, enquanto `tee` salva e exibe o log.
-6. Upload do relatório, screenshots, traces, vídeos disponíveis e log. O upload usa `if: always()` para ocorrer também quando uma etapa anterior falha.
+6. Upload do relatório, screenshots e log. O upload usa `if: always()` para ocorrer também quando uma etapa anterior falha.
 
 Em execução manual, os inputs permitem selecionar `all`, `chromium`, `firefox` ou `mobile-chromium` e filtrar os testes por ID ou texto do título. Em push e pull request, todos os projetos configurados são executados.
 
-## 11. Histórico de alterações e validação
+## 11. Validação
 
-O projeto evoluiu de uma suíte inicial para uma estrutura com page objects, fixtures, dados centralizados, documentação de estratégia e riscos, matriz de cenários, compatibilidade desktop/mobile e workflow GitHub Actions. Também foram alinhados os títulos e comentários dos testes em português aos IDs do case.
-
-Na execução mais recente registrada antes da correção do page object, a jornada da tabela falhou em Chromium e Firefox ao procurar a coluna cujo cabeçalho acessível aparecia como `Status ↕`, embora o código esperasse exatamente `Status`. O page object foi ajustado para remover os indicadores de ordenação antes da comparação. **A alteração foi feita após aquela execução e ainda não foi validada por uma nova execução dos testes.** Portanto, este relatório não declara a suíte atualmente aprovada.
-
-Verificações de documentação e alterações foram acompanhadas por `git diff --check`. Por orientação da usuária, os testes não são executados automaticamente a cada alteração; execute-os quando desejar validar a correção.
+O comando `npx playwright test --list` descobre 10 specs e 19 combinações teste/projeto. `npm run typecheck` verifica a configuração, os arquivos de suporte e os specs em `Spec/`. A listagem confirma descoberta dos testes; não substitui a execução completa da suíte.
 
 ## 12. Limitações conhecidas
 
 - A aplicação é pública e pode ficar indisponível ou mudar sem aviso.
 - Dados da tabela não são controlados localmente pelo projeto.
 - O teste mobile é uma emulação e cobre a busca, não todos os aspectos visuais e ações.
-- A verificação de acessibilidade cobre labels e nome acessível básico; não é uma auditoria WCAG completa.
+- O cenário A11Y-03 cobre um fluxo de cadastro por teclado; não é uma auditoria WCAG completa.
 - A validação não substitui testes manuais de teclado, leitor de tela, contraste ou dispositivos reais.
 - Cenários adiados podem ser adicionados conforme risco, estabilidade e prioridade.
 
 ## 13. Próximos passos recomendados
 
-1. Executar novamente os testes desktop em Chromium e Firefox para confirmar a normalização do cabeçalho `Status`.
-2. Revisar relatório HTML e screenshots; investigar qualquer falha externa separadamente de regressão.
-3. Usar `npm run typecheck` para verificar tipos se houver mudanças no TypeScript.
-4. Considerar ampliar cobertura de ordenação, paginação, ação na tabela, navegação por teclado e layout mobile.
-5. Avaliar axe-core com triagem dos resultados e complementar a acessibilidade com revisão manual.
+1. Executar a suíte completa e revisar relatório HTML e screenshots; investigar falhas externas separadamente de regressões.
+2. Ampliar a cobertura com ordenação, validações negativas de formulário e testes E2E para o dropdown assíncrono.
+3. Considerar verificações de layout e ações adicionais em mobile.
+4. Complementar o teste de teclado com análise de acessibilidade automatizada e revisão manual.
 
 ## 14. Links internos
 

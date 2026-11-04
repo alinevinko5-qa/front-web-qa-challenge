@@ -1,5 +1,10 @@
 import type { Page } from '@playwright/test';
-import type { RegistrationData } from '../data/registration.js';
+
+type RegistrationData = {
+  fullName: string;
+  email: string;
+  password: string;
+};
 
 export class RegistrationPage {
   constructor(private readonly page: Page) {}
